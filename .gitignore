@@ -134,3 +134,5 @@ dmypy.json
 *.cfg
 
 settings.json
+
+.DS_Store

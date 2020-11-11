@@ -1,7 +1,12 @@
+from datetime import date
 import config
 import boto3
+import datetime
 
 class AWS(object):
+    """
+        AWS base class containing all common attributes that other AWS services would need to utilize.
+    """
     def __init__(self) -> None:
         self.key = config.KEY
         self.secret = config.SECRET
@@ -34,29 +39,32 @@ class AWS(object):
         self.log_jsonpath = config.LOG_JSONPATH
         self.song_data = config.SONG_DATA
 
-        print('aws_common init completed')
+        # print('aws_common init completed')
 
 
 def get_ec2_resource(region_name='us-west-1'):
-    return boto3.resource('ec2',
+    return boto3.client('ec2',
                             region_name=region_name,
                             aws_access_key_id=config.KEY,
-                            aws_secret_access=config.SECRET)
+                            aws_secret_access_key=config.SECRET)
 
 def get_s3_resource(region_name='us-west-1'):
     return boto3.resource('s3',
                             region_name=region_name,
                             aws_access_key_id=config.KEY,
-                            aws_secret_access=config.SECRET)
+                            aws_secret_access_key=config.SECRET)
 
 def get_IAM_client(region_name='us-west-1'):
     return boto3.client('iam',
                             region_name=region_name,
                             aws_access_key_id=config.KEY,
-                            aws_secret_access=config.SECRET)
+                            aws_secret_access_key=config.SECRET)
 
 def get_redshift_client(region_name='us-west-1'):
     return boto3.client('redshift',
                             region_name=region_name,
                             aws_access_key_id=config.KEY,
-                            aws_secret_access=config.SECRET)
+                            aws_secret_access_key=config.SECRET)
+
+def get_datetime_now():
+    return datetime.datetime.now()

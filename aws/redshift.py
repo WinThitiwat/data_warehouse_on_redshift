@@ -1,5 +1,7 @@
+import aws 
 from . import aws_common
 from .iam import IAM
+from .aws_common import get_datetime_now
 
 class Redshift(aws_common.AWS):
 
@@ -10,11 +12,22 @@ class Redshift(aws_common.AWS):
         return 'redshift.Redshift()'
 
     def create_Redshift_cluster(self, iam_client):
+        """
+        Create a new Redshift cluster where IAM information is based on the dwh.cfg
+
+        :param iam_client: IAM Client object
+
+        :return None
+        """
         try:
+            aws.logger.info("Creating Cluster...")
+
             redshift = aws_common.get_redshift_client()
             iam_role = IAM.get_IAM_ARN_role(iam_client, self.iam_role_name)
 
-            response = redshift.create_cluster(
+            start_time = get_datetime_now()
+
+            create_cluster_resp = redshift.create_cluster(
                 # hardware params
                 ClusterType=self.dwh_cluster_type,
                 NodeType=self.dwh_node_type,
@@ -29,22 +42,62 @@ class Redshift(aws_common.AWS):
                 # IAM role params
                 IamRoles=[iam_role]
             )
+
+            aws.logger.info("Creating Cluster Completed!")
+            aws.logger.info("Creating Cluster Took: {millisec} ms".format(
+                millisec=(get_datetime_now() - start_time).microseconds / 1000.0
+            ))
+            aws.logger.info(f"Creating Cluster Status: {create_cluster_resp['ResponseMetadata']['HTTPStatusCode']}")
+
         except Exception as exp:
-            print(f"Failed to create new Redshift cluster: {exp}")
+            aws.logger.error(f"Error occurred while creating Redshift cluster: {exp}")
 
     @staticmethod
     def get_Redshift_cluster_status(redshift_client, cluster_identifier):
-        return redshift_client.describe_clusters(ClusterIdentifier=cluster_identifier)['Clusters'][0]['ClusterStatus']
+        """
+        Get Redshift cluster status
 
-    @staticmethod
-    def delete_Redshift_cluster(redshift_client, cluster_identifier):
-        
-        if(len(redshift_client.describe_clusters(ClusterIdentifier=cluster_identifier)['Clusters'][0]) == 0):
-            print(f"Redshift Cluster: {cluster_identifier} does not exist.")
+        :param redshift_client: Redshift Client object
+        :param cluster_identifier: Redshift Cluster Identifier
+
+        :return string of Redshift cluster status if found, else return None
+        """
         try:
-            redshift_client.delete_cluster(ClusterIdentifier=cluster_identifier,  SkipFinalClusterSnapshot=True)
+            return redshift_client.describe_clusters(ClusterIdentifier=cluster_identifier)['Clusters'][0]['ClusterStatus']
         except Exception as exp:
-            print(exp)
+            aws.logger.error(f"Error occurred while retrieving Redshift Cluster: {exp}")
+        return None
 
-        print(f"Redshift Cluster: {cluster_identifier} has been successfully deleted")
+    def delete_Redshift_cluster(self, redshift_client, cluster_identifier=None):
+        """
+        Delete Redshift cluster
 
+        :param redshift_client: Redshift Client object
+        :param cluster_identifier: (option) Redshift Cluster Identifier. If not provided, Redshift Cluster Identifier from the dwh.cfg will be used.
+
+        :return None
+        """
+        if cluster_identifier is None:
+            cluster_identifier = self.dwh_cluster_identifier
+
+        if(len(redshift_client.describe_clusters(ClusterIdentifier=cluster_identifier)['Clusters'][0]) == 0):
+            aws.logger.info(f"Redshift Cluster: {cluster_identifier} does not exist.")
+            return None
+
+        try:
+            aws.logger.info("Deleting Cluster...")
+            
+            start_time = get_datetime_now()
+
+            delete_cluster_resp = redshift_client.delete_cluster(ClusterIdentifier=cluster_identifier,  SkipFinalClusterSnapshot=True)
+
+            aws.logger.info("Deleting Cluster Completed!")
+            aws.logger.info("Deleting Cluster Took: {millisec} ms".format(
+                millisec=(get_datetime_now() - start_time).microseconds / 1000.0
+            ))
+            aws.logger.info(f"Deleting Cluster Status: {delete_cluster_resp['ResponseMetadata']['HTTPStatusCode']}")
+
+        except Exception as exp:
+            aws.logger.error(f"Error occurred while deleting Redshift cluster: {exp}")
+
+    

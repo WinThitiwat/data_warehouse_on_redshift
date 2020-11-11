@@ -80,7 +80,8 @@ user_table_create = ("""
         gender CHAR,
         level VARCHAR(10)
     )
-    SORTKEY( user_id );
+    SORTKEY( user_id )
+    ;
 """)
 
 song_table_create = ("""
@@ -128,28 +129,92 @@ time_table_create = ("""
 # STAGING TABLES
 
 staging_events_copy = ("""
-
-""").format()
+    COPY staging_events FROM {source}
+    CREDENTIALS 'aws_iam_role={iam_role}'
+    JSON 'auto'
+""").format(
+    source=config.LOG_DATA,
+    iam_role=config.IAM_ROLE_NAME
+)
 
 staging_songs_copy = ("""
-
-""").format()
+    COPY staging_songs FROM {source}
+    CREDENTIALS 'aws_iam_role={iam_role}'
+    JSON 'auto'
+""").format(
+    source=config.SONG_DATA,
+    iam_role=config.IAM_ROLE_NAME
+)
 
 # FINAL TABLES
-
+# timestamp format ref: https://www.fernandomc.com/posts/redshift-epochs-and-timestamps/
 songplay_table_insert = ("""
+    INSERT INTO songplays
+    (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent )
+    SELECT
+        TIMESTAMP 'epoch' + (se.ts / 1000) * INTERVAL '1 second' as start_time,
+        se.userId,
+        se.level,
+        ss.song_id,
+        ss.artist_id,
+        se.sessionId,
+        se.location,
+        se.userAgent
+    FROM staging_events AS se
+    INNER JOIN staging_songs AS ss
+    ON se.song = ss.title AND se.artist = ss.artist_name;
 """)
 
 user_table_insert = ("""
+    INSERT INTO users
+    (user_id, first_name, last_name, gender, level)
+    SELECT
+        userId,
+        firstName,
+        lastName,
+        gender,
+        level
+    FROM staging_events
+    WHERE userId NOT NULL;
 """)
 
 song_table_insert = ("""
+    INSERT INTO songs
+    (song_id, title, artist_id, year, duration)
+    SELECT
+        song_id,
+        title,
+        artist_id,
+        year,
+        duration
+    FROM staging_songs
+    WHERE song_id NOT NULL;
 """)
 
 artist_table_insert = ("""
+    INSERT INTO artists
+    (artist_id, name, location, latitude, longitude)
+    SELECT
+        artist_id,
+        artist_name,
+        artist_location,
+        artist_latitude,
+        artist_longitude
+    FROM staging_songs;
 """)
 
 time_table_insert = ("""
+    INSERT INTO time
+    (start_time, hour, day, week, month, year, weekday)
+    SELECT
+        TIMESTAMP 'epoch' + (se.ts / 1000) * INTERVAL '1 second' as start_time,
+        EXTRACT( hour FROM start_time) as hour,
+        EXTRACT( day FROM start_time) as day,
+        EXTRACT( week FROM start_time) as week,
+        EXTRACT( month FROM start_time) as month,
+        EXTRACT( year FROM start_time) as year,
+        to_char(start_time, 'DAY')
+    FROM staging_events;
 """)
 
 # QUERY LISTS
