@@ -1,4 +1,4 @@
-# data_warehouse_on_redshift
+# data_warehouse_on_redshift `(Still In Progress)`
 
 # Overview of the project
 Check out [Data Modeling with Postgres README](https://github.com/WinThitiwat/data_modeling_with_postgres/blob/master/README.md)
@@ -29,7 +29,7 @@ Check out [Data Modeling with Postgres README](https://github.com/WinThitiwat/da
 ### `time` table
 - Loading time took: 629.934 ms
 - Number of records: 8023
-# data_warehouse_on_redshift `(Still In Progress)`
+# data_warehouse_on_redshift
 
 ### Setup Configurations File at the Root Project - dwh.config
 
