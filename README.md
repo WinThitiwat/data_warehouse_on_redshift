@@ -9,7 +9,7 @@ Check out [Data Modeling with Postgres README](https://github.com/WinThitiwat/da
 ### `staging_events` table
 - Loading time took: less than 10 seconds
 - Number of records: 8056
-### staging_songs
+### `staging_songs` table
 - Loading time took: approximate 2 hours
 - Number of records: 385252
 
