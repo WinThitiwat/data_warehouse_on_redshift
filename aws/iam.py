@@ -19,9 +19,9 @@ class IAM(aws_common.AWS):
 
         :return None
         """
-        aws.logger.info("Creating IAM Role...")
 
         try:
+            aws.logger.info("Creating IAM Role...")
             start_time = get_datetime_now()
             # create a new IAM role
             create_resp = iam_client.create_role(
@@ -51,7 +51,8 @@ class IAM(aws_common.AWS):
 
         except Exception as exp:
             aws.logger.error(f"Error occurred while creating IAM Role: {exp}")
-        
+            return None
+
         try:
             aws.logger.info("Attaching Role Policy...")
 
@@ -70,7 +71,7 @@ class IAM(aws_common.AWS):
 
         except Exception as exp:
             aws.logger.error(f"Error occurred while attaching IAM Role Policy: {exp}")
-
+            return None
     
     @staticmethod
     def get_IAM_ARN_role(iam_client, im_role_name):
@@ -79,7 +80,7 @@ class IAM(aws_common.AWS):
 
         :param iam_role_name: (optional) IAM Role to be deleted
 
-        :return IAM ARN Role name if given `im_role_name` found else return None 
+        :return a string of IAM ARN Role name if given `im_role_name` found else return None 
         """
         try:
             return iam_client.get_role(RoleName=im_role_name)['Role']['Arn']
@@ -103,8 +104,8 @@ class IAM(aws_common.AWS):
         if policy_arn is None:
             policy_arn = self.iam_policy_arn
 
-        aws.logger.info(f"Start deleting IAM role: {iam_role_name}...")
         try:
+            aws.logger.info(f"Start deleting IAM role: {iam_role_name}...")
             aws.logger.info("Detaching Role Policy...")
 
             start_time = get_datetime_now()
@@ -119,6 +120,7 @@ class IAM(aws_common.AWS):
 
         except Exception as exp:
             aws.logger.error(f"Error occurred while detaching IAM Role: {exp}")
+            return None
 
         try:
             aws.logger.info("Deleting Role...")
@@ -135,5 +137,6 @@ class IAM(aws_common.AWS):
 
         except Exception as exp:
             aws.logger.error(f"Error occurred while deleting IAM Role: {exp}")
+            return None
 
         aws.logger.info(f"IAM Role: {iam_role_name} has been successfully deleted.")

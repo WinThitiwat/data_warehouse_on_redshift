@@ -1,3 +1,6 @@
+"""
+    All methods in the `aws` package here are referenced from the boto3.amazonaws.com
+"""
 from .iam import *
 from .redshift import *
 from .s3 import *

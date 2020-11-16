@@ -11,23 +11,25 @@ class Redshift(aws_common.AWS):
     def __repr__(self):
         return 'redshift.Redshift()'
 
-    def create_Redshift_cluster(self, iam_client):
+
+    def create_Redshift_cluster(self, redshift_client, iam_client, vpc_security_group_id):
         """
         Create a new Redshift cluster where IAM information is based on the dwh.cfg
 
+        :param redshift_client: Redshift Client object
         :param iam_client: IAM Client object
+        :param vpc_security_group_id: Security Group ID
 
         :return None
         """
         try:
             aws.logger.info("Creating Cluster...")
 
-            redshift = aws_common.get_redshift_client()
             iam_role = IAM.get_IAM_ARN_role(iam_client, self.iam_role_name)
-
+            # print(iam_role)
             start_time = get_datetime_now()
 
-            create_cluster_resp = redshift.create_cluster(
+            create_cluster_resp = redshift_client.create_cluster(
                 # hardware params
                 ClusterType=self.dwh_cluster_type,
                 NodeType=self.dwh_node_type,
@@ -38,6 +40,9 @@ class Redshift(aws_common.AWS):
                 ClusterIdentifier=self.dwh_cluster_identifier,
                 MasterUsername=self.dwh_db_user,
                 MasterUserPassword=self.dwh_db_password,
+
+                # VpcSecurityGroupIds
+                VpcSecurityGroupIds=[vpc_security_group_id],
 
                 # IAM role params
                 IamRoles=[iam_role]
