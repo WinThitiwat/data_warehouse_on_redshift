@@ -1,4 +1,3 @@
-# data_warehouse_on_redshift `(Still In Progress)`
 
 # Overview of the project
 Check out [Data Modeling with Postgres README](https://github.com/WinThitiwat/data_modeling_with_postgres/blob/master/README.md)
