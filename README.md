@@ -3,9 +3,10 @@
 2. [Datasets](#datasets)
 3. [Database Schema](#database-schema)
 4. [ETL Findings](#etl-findings)
-5. [Project Setup](#project-setup)
-6. [How to Run](#how-to-run)
-7. [Project Author](#project-author)
+5. [Project Files](#project-files)
+6. [Project Setup](#project-setup)
+7. [How to Run](#how-to-run)
+8. [Project Author](#project-author)
 
 # Overview of the project
 This is to simulate a situation that a music startup, Sparkify, has grown their user base and song database and want to move their processes and data onto the cloud. Their data resides in S3, in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
@@ -92,6 +93,13 @@ In this project, the database schema is based on the star schema, which includes
 #### `time` table
 - Loading time took: 629.934 ms
 - Number of records: 8023
+
+## **Project Files**
+- `aws/` - AWS Python wrapper package
+- `sql_queries.py` - a Python file containing a set of data definition and data manipulation SQL commands for fact table and dimension tables
+- `create_tables.py` - a Python file establishing the <strong>sparkify</strong> database connection and creating fact table and dimension tables
+- `etl.py` - a Python file implementing the actual ETL data pipeline process for all datasets
+- `requirements.txt` - a text file containing all mandatory dependencies for the project
 
 
 ## **Project Setup**
