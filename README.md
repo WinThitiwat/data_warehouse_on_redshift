@@ -5,6 +5,7 @@
 4. [ETL Findings](#etl-findings)
 5. [Project Setup](#project-setup)
 6. [How to Run](#how-to-run)
+7. [Project Author](#project-author)
 
 # Overview of the project
 Check out [Data Modeling with Postgres README](https://github.com/WinThitiwat/data_modeling_with_postgres/blob/master/README.md)
