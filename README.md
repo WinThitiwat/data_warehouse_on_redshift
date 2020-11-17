@@ -62,7 +62,7 @@ In this project, the database schema is based on the star schema, which includes
   start_time, hour, day, week, month, year, weekday
   ```
 
-## ETL Findings
+## **ETL Findings**
 ### Loading S3 to Staging tables in Redshift
 #### `staging_events` table
 - Loading time took: less than 10 seconds
@@ -87,7 +87,7 @@ In this project, the database schema is based on the star schema, which includes
 #### `time` table
 - Loading time took: 629.934 ms
 - Number of records: 8023
-# data_warehouse_on_redshift
+
 
 ## **Project Setup**
 1: After cloning and navigating to the root directory for the project, make sure your system has `Python3` and `pip3` installed already. Check in Terminal by
@@ -111,39 +111,61 @@ $ pip3 install -r requirements.txt
 
 5: Setup Configurations File at the Root Project - `dwh.config`
 
-    [AWS]
+    [AWS] # AWS IAM Credential
     KEY=''
     SECRET=''
-
-    [DWH]
-    DWH_CLUSTER_TYPE=''
-    DWH_NUM_NODES=''
-    DWH_NODE_TYPE=''
+    
+    [DWH] # Redshift config
+    DWH_CLUSTER_TYPE='' # i.e. multi-node
+    DWH_NUM_NODES='' # i.e. 4
+    DWH_NODE_TYPE='' # i.e. dc2.large
     DWH_CLUSTER_IDENTIFIER=''
     DWH_DB=''
     DWH_DB_USER=''
     DWH_DB_PASSWORD=''
     DWH_PORT=5439 # default: 5439
+    
+    [SECURITY_GROUP] # EC2 Security Group config
+    GROUP_NAME=''
+    GROUP_DESCRIPTION=''
+    
+    [INGRESS_RULE] # EC2 Inbound Rule (ingress rule) config
+    CIDR_IP='' # i.e. 0.0.0.0/0
+    INGRESS_DESCRIPTION=''
+    IP_PROTOCOL='' # i.e. TCP
+    FROM_PORT=5439 # default: 5439
+    TO_PORT=5439 # default: 5439
 
-    [CLUSTER]
-    HOST=''
+    [CLUSTER] # Redshift Endpoint info
+    HOST='' # 
     DB_NAME=''
     DB_USER=''
     DB_PASSWORD=''
     DB_PORT=''
 
-    [IAM_ROLE]
-    IAM_ROLE_NAME=''
-    IAM_POLICY_ARN=''
+    [IAM_ROLE] # IAM Role config
+    IAM_ROLE_NAME='' #
+    IAM_POLICY_ARN='' # i.e. arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
     IAM_ROLE_DESCRIPTION=''
-
-    [S3]
+    IAM_ARN='' # i.e. arn:aws:iam::xxxxxxxxxxxx:role/<role_name>
+    
+    [S3] # data source
     LOG_DATA='s3://udacity-dend/log-data'
     LOG_JSONPATH='s3://udacity-dend/log_json_path.json'
     SONG_DATA='s3://udacity-dend/song-data'
 
 
 ## **How to run**
+Note that if you have no AWS IAM role, EC2 Security Group, and Redshift Cluster yet, you can also create them using this project AWS Python wrapper package (`aws`)
+- To create and enable IAM role, EC2 Security Group, and Redshift Cluster
+```
+$ python3 run_aws_services.py 
+```
+- To close and delete IAM role, EC2 Security Group, and Redshift Cluster
+```
+$ python3 close_aws_services.py 
+```
+#### After setting up your AWS IAM role, EC2 Security Group, and Redshift Cluster
 1. Run `create_tables.py` first to create database connection and create empty fact and dimension tables
 ```
 $ python3 create_tables.py
@@ -153,7 +175,8 @@ $ python3 create_tables.py
 $ python3 etl.py
 ```
 
+
 ## **Project Author**
-- Author: Thitiwat Watanajaturaporn
+- Author: Thitiwat Watanajaturaporn 
 - Note: this project is part of Udacity's Data Engineering Nanodegree Program.
 
