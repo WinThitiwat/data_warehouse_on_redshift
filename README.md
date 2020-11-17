@@ -100,7 +100,8 @@ In this project, the database schema is based on the star schema, which includes
 - `create_tables.py` - a Python file establishing the <strong>sparkify</strong> database connection and creating fact table and dimension tables
 - `etl.py` - a Python file implementing the actual ETL data pipeline process for all datasets
 - `requirements.txt` - a text file containing all mandatory dependencies for the project
-
+- `run_aws_services.py` - a Python file establishing AWS IAM role, EC2 Security Group, and Redshift Cluster
+- `close_aws_services.py` - a Python file closing and deleting AWS IAM role, EC2 Security Group, and Redshift Cluster
 
 ## **Project Setup**
 1: After cloning and navigating to the root directory for the project, make sure your system has `Python3` and `pip3` installed already. Check in Terminal by
