@@ -30,7 +30,7 @@ staging_events_table_create= ("""
         sessionId INTEGER ,
         song VARCHAR,
         status INTEGER,
-        ts BIGINT,
+        ts TIMESTAMP,
         userAgent VARCHAR,
         userId INTEGER 
     );
@@ -41,13 +41,13 @@ staging_songs_table_create = ("""
     (
         num_songs INTEGER,
         artist_id VARCHAR,
-        artist_latitude DECIMAL,
-        artist_longitude DECIMAL,
+        artist_latitude FLOAT,
+        artist_longitude FLOAT,
         artist_location VARCHAR(512),
         artist_name VARCHAR(512),
         song_id VARCHAR,
         title VARCHAR(512),
-        duration DECIMAL,
+        duration FLOAT,
         year INTEGER
     );
 """)
@@ -55,7 +55,7 @@ staging_songs_table_create = ("""
 songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplays
     (
-        songplay_id INTEGER IDENTITY(1,1),
+        songplay_id INTEGER IDENTITY(1,1) PRIMARY KEY,
         start_time TIMESTAMP,
         user_id INTEGER,
         level VARCHAR,
@@ -99,7 +99,7 @@ song_table_create = ("""
 artist_table_create = ("""
     CREATE TABLE IF NOT EXISTS artists
     (
-        artist_id VARCHAR,
+        artist_id VARCHAR PRIMARY KEY,
         name VARCHAR(512),
         location VARCHAR(512),
         latitude DECIMAL,
@@ -112,7 +112,7 @@ artist_table_create = ("""
 time_table_create = ("""
     CREATE TABLE IF NOT EXISTS time
     (
-        start_time TIMESTAMP,
+        start_time TIMESTAMP PRIMARY KEY,
         hour SMALLINT,
         day SMALLINT,
         week SMALLINT,
@@ -165,7 +165,7 @@ songplay_table_insert = ("""
         se.userAgent
     FROM staging_events AS se
     INNER JOIN staging_songs AS ss
-    ON se.song = ss.title AND se.artist = ss.artist_name;
+    ON se.song = ss.title AND se.artist = ss.artist_name AND se.page = 'NextSong';
 """)
 
 user_table_insert = ("""
@@ -211,14 +211,15 @@ time_table_insert = ("""
     INSERT INTO time
     (start_time, hour, day, week, month, year, weekday)
     SELECT
-        DISTINCT TIMESTAMP 'epoch' + (se.ts / 1000) * INTERVAL '1 second' as start_time,
+        DISTINCT start_time,
         EXTRACT( hour FROM start_time) as hour,
         EXTRACT( day FROM start_time) as day,
         EXTRACT( week FROM start_time) as week,
         EXTRACT( month FROM start_time) as month,
         EXTRACT( year FROM start_time) as year,
         to_char(start_time, 'DAY')
-    FROM staging_events AS se;
+    FROM songplays
+    WHERE start_time IS NOT NULL;
 """)
 
 # QUERY LISTS
