@@ -15,7 +15,7 @@ class EC2(aws_common.AWS):
 
     def get_EC2_security_group(self, ec2_client):
         """
-        Get EC2 Security Group
+        Get EC2 Security Group.
 
         :param ec2_client: EC2 Client object.
 
@@ -26,12 +26,13 @@ class EC2(aws_common.AWS):
 
     def is_already_existed(self, ec2_client, group_name=None):
         """
-        Check if the given `group_name` already exist in the given EC2 instance
+        Check if the given `group_name` already exist in the given EC2 instance.
 
         :param ec2_client: EC2 Client object.
         :param group_name: a string of group name to be searched.
 
-        :return True/False. Return True if the given `group_name` is found, else False.
+        :return True/False. Return True if the given `group_name`
+            is found, else False.
         """
         group_info = self.get_EC2_security_group(ec2_client)[0]
         if group_info is None:
@@ -44,10 +45,13 @@ class EC2(aws_common.AWS):
 
     def create_EC2_security_group(self, ec2_client, authorize_group=True):
         """
-        Create a security group and add the specified ingress rule to the newly created security group.
+        Create a security group and add the specified ingress rule 
+        to the newly created security group.
 
         :param ec2_client: EC2 Client object
-        :param authorize_group: Boolean variable telling if after creating the security group, the method should run authorize security group methods.
+        :param authorize_group: Boolean variable telling if after 
+            creating the security group, the method should run authorize 
+            security group methods.
 
         :return None
         """
@@ -89,7 +93,7 @@ class EC2(aws_common.AWS):
 
     def authorize_security_group(self, ec2_client, security_group_id):
         """
-        Add the specified ingress rules to the given security group's ID
+        Add the specified ingress rules to the given security group's ID.
         
         :param ec2_client: EC2 Client object
         :param security_group_id: Security Group ID

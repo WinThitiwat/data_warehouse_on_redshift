@@ -5,6 +5,14 @@ from sql_queries import copy_table_queries, insert_table_queries
 
 
 def load_staging_tables(cur, conn):
+    """
+    This is to `COPY` data from S3 into staging tables in Redshift cluter.
+
+    :param cur: Database cursor reference
+    :param conn: Database connection instance
+    
+    :return None
+    """
     total_queries = len(copy_table_queries)
     print(f"There are {total_queries} tables to load")
 
@@ -22,6 +30,16 @@ def load_staging_tables(cur, conn):
 
 
 def insert_tables(cur, conn):
+    """
+    This is to run all `INSERT INTO TABLE` manipulating queries to 
+    insert all data from the staging tables into the dimensional and 
+    fact tables in Redshift cluster.
+
+    :param cur: Database cursor reference
+    :param conn: Database connection instance
+    
+    :return None
+    """
     total_queries = len(insert_table_queries)
     print(f"There are {total_queries} tables to insert")
 

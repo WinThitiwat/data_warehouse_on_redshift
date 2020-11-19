@@ -13,7 +13,8 @@ class IAM(aws_common.AWS):
 
     def create_IAM_role(self, iam_client):
         """
-        Create a new IAM role and attach a role policy based on information from the dwh.cfg 
+        Create a new IAM role and attach a role policy based 
+            on information from the dwh.cfg 
 
         :param iam_client: IAM Client object
 
@@ -80,7 +81,8 @@ class IAM(aws_common.AWS):
 
         :param iam_role_name: (optional) IAM Role to be deleted
 
-        :return a string of IAM ARN Role name if given `im_role_name` found else return None 
+        :return a string of IAM ARN Role name if given `im_role_name` 
+            is found else return None 
         """
         try:
             return iam_client.get_role(RoleName=im_role_name)['Role']['Arn']
@@ -90,7 +92,8 @@ class IAM(aws_common.AWS):
 
     def delete_IAM_role(self, iam_client, iam_role_name=None, policy_arn=None):
         """
-        Delete IAM role and detach a role policy based on information from the dwh.cfg 
+        Delete IAM role and detach a role policy based on information 
+            from the dwh.cfg 
 
         :param iam_client: IAM Client object
         :param iam_role_name: (optional) IAM Role to be deleted

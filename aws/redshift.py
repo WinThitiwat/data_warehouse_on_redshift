@@ -14,7 +14,8 @@ class Redshift(aws_common.AWS):
 
     def create_Redshift_cluster(self, redshift_client, iam_client, vpc_security_group_id):
         """
-        Create a new Redshift cluster where IAM information is based on the dwh.cfg
+        Create a new Redshift cluster where IAM information 
+        is based on the dwh.cfg.
 
         :param redshift_client: Redshift Client object
         :param iam_client: IAM Client object
@@ -60,7 +61,7 @@ class Redshift(aws_common.AWS):
     @staticmethod
     def get_Redshift_cluster_status(redshift_client, cluster_identifier):
         """
-        Get Redshift cluster status
+        Get Redshift cluster status.
 
         :param redshift_client: Redshift Client object
         :param cluster_identifier: Redshift Cluster Identifier
@@ -75,7 +76,7 @@ class Redshift(aws_common.AWS):
 
     def delete_Redshift_cluster(self, redshift_client, cluster_identifier=None):
         """
-        Delete Redshift cluster
+        Delete Redshift cluster.
 
         :param redshift_client: Redshift Client object
         :param cluster_identifier: (option) Redshift Cluster Identifier. If not provided, Redshift Cluster Identifier from the dwh.cfg will be used.

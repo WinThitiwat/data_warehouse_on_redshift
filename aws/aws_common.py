@@ -4,7 +4,8 @@ import datetime
 
 class AWS(object):
     """
-        AWS base class containing all common attributes that other AWS services would need to utilize.
+        AWS base class containing all common attributes that 
+        other AWS services would need to utilize.
     """
     def __init__(self) -> None:
         self.key = config.KEY
